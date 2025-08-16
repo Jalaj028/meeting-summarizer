@@ -75,19 +75,24 @@ app.post('/api/summarize', upload.single('transcript'), async (req, res) => {
   try {
     // Get the text to summarize
     let text = '';
+    let customPrompt = '';
     
     if (req.file) {
       // Read from uploaded file buffer (memory storage)
       text = req.file.buffer.toString('utf-8');
+      // Get custom prompt from FormData
+      customPrompt = req.body.prompt || '';
     } else if (req.body.text) {
       // Use direct text input
       text = req.body.text;
+      // Get custom prompt from JSON body
+      customPrompt = req.body.prompt || '';
     } else {
       return res.status(400).json({ error: 'No transcript provided' });
     }
 
     // Get custom prompt or use default
-    const prompt = req.body.prompt || 'Summarize the following text in bullet points';
+    const prompt = customPrompt || 'Summarize the following text in bullet points';
 
     // Generate summary using Groq AI
     const completion = await groq.chat.completions.create({

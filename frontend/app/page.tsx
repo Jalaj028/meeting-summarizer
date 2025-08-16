@@ -10,6 +10,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [emailRecipients, setEmailRecipients] = useState('');
   const [emailStatus, setEmailStatus] = useState('');
+  const [customPrompt, setCustomPrompt] = useState('');
 
   // Handle file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,9 +45,15 @@ export default function Home() {
         ? (() => {
             const formData = new FormData();
             formData.append('transcript', file);
+            if (customPrompt) {
+              formData.append('prompt', customPrompt);
+            }
             return formData;
           })()
-        : JSON.stringify({ text: transcript });
+        : JSON.stringify({ 
+            text: transcript,
+            ...(customPrompt && { prompt: customPrompt })
+          });
 
       // Make API call
       const response = await fetch(apiEndpoint, {
@@ -136,6 +143,22 @@ export default function Home() {
             placeholder="Paste your meeting transcript here..."
             className="w-full p-3 border rounded-md h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-y"
           />
+
+          {/* Custom Prompt Input */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Custom Instructions (Optional)
+            </label>
+            <textarea
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              placeholder='e.g., "Summarize in bullet points for executives" or "Highlight only action items" or "Focus on technical decisions"'
+              className="w-full p-3 border rounded-md h-[60px] focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-y"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Leave empty to use default summarization
+            </p>
+          </div>
 
           {/* Generate Button */}
           <button
