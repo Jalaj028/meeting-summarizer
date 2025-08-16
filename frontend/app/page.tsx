@@ -134,7 +134,7 @@ export default function Home() {
             value={transcript}
             onChange={(e) => setTranscript(e.target.value)}
             placeholder="Paste your meeting transcript here..."
-            className="w-full p-3 border rounded-md h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full p-3 border rounded-md h-96 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-y"
           />
 
           {/* Generate Button */}
@@ -154,7 +154,7 @@ export default function Home() {
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full p-4 border rounded-md h-80 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm leading-relaxed"
+              className="w-full p-4 border rounded-md h-96 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm leading-relaxed resize-y"
             />
           </div>
         )}
