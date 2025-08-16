@@ -37,6 +37,7 @@ export default function Home() {
     
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const apiEndpoint = apiUrl.endsWith('/') ? `${apiUrl}api/summarize` : `${apiUrl}/api/summarize`;
       
       // Prepare request body
       const body = file 
@@ -48,7 +49,7 @@ export default function Home() {
         : JSON.stringify({ text: transcript });
 
       // Make API call
-      const response = await fetch(`${apiUrl}/api/summarize`, {
+      const response = await fetch(apiEndpoint, {
         method: 'POST',
         body: body,
         headers: file ? {} : { 'Content-Type': 'application/json' }
@@ -80,9 +81,10 @@ export default function Home() {
     
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const apiEndpoint = apiUrl.endsWith('/') ? `${apiUrl}api/send-email` : `${apiUrl}/api/send-email`;
       const recipients = emailRecipients.split(',').map(email => email.trim());
 
-      const response = await fetch(`${apiUrl}/api/send-email`, {
+      const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -18,7 +18,16 @@ const groq = new Groq({
 });
 
 // Setup middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://meeting-summarizer-frontend.vercel.app',
+    /\.vercel\.app$/  // Allow any Vercel app subdomain
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Configure file upload (10MB max, using memory storage for Vercel)
