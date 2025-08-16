@@ -4,7 +4,6 @@ const multer = require('multer');
 const dotenv = require('dotenv');
 const { Groq } = require('groq-sdk');
 const nodemailer = require('nodemailer');
-const fs = require('fs');
 
 // Load environment variables
 dotenv.config();
@@ -22,9 +21,9 @@ const groq = new Groq({
 app.use(cors());
 app.use(express.json());
 
-// Configure file upload (10MB max, stored temporarily)
+// Configure file upload (10MB max, using memory storage for Vercel)
 const upload = multer({
-  dest: 'uploads/',
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
@@ -69,9 +68,8 @@ app.post('/api/summarize', upload.single('transcript'), async (req, res) => {
     let text = '';
     
     if (req.file) {
-      // Read from uploaded file
-      text = fs.readFileSync(req.file.path, 'utf-8');
-      fs.unlinkSync(req.file.path); // Clean up
+      // Read from uploaded file buffer (memory storage)
+      text = req.file.buffer.toString('utf-8');
     } else if (req.body.text) {
       // Use direct text input
       text = req.body.text;
